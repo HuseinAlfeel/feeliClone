@@ -11,8 +11,7 @@ import Notification from "../models/notification.model.js";
 
 
 export const getUserProfile = async(req, res) =>{
-    const {username} = req.prams;
-
+    const { username } = req.params; 
     try {
         const user = await User.findOne({username}).select("-password");
         if(!user){
