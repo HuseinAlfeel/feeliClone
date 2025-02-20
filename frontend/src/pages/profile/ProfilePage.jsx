@@ -13,6 +13,8 @@ import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 
 const ProfilePage = () => {
+	// const {data:authUser, error, isPending } =  useQuery({queryKey: ["authUser"]}); Just an example to how to use queries through the key
+
 	const [coverImg, setCoverImg] = useState(null);
 	const [profileImg, setProfileImg] = useState(null);
 	const [feedType, setFeedType] = useState("posts");
