@@ -3,32 +3,33 @@ import { BsEmojiSmileFill } from "react-icons/bs";
 import { useRef, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 const CreatePost = () => {
 	const [text, setText] = useState("");
 	const [img, setImg] = useState(null);
-	const imgRef = useRef(null); // to open the file explorer when seraching for an image
+	const imgRef = useRef(null);
 
-	const {data:authUser} = useQuery({queryKey: ["authUser"]});
+	const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 	const queryClient = useQueryClient();
 
-
-
-
-	
-	const {mutate:createPost, isPending, isError, error} = useMutation({
-		mutationFn: async({text, img}) =>{
+	const {
+		mutate: createPost,
+		isPending,
+		isError,
+		error,
+	} = useMutation({
+		mutationFn: async ({ text, img }) => {
 			try {
-				const res = await fetch("/api/posts/create",{
+				const res = await fetch("/api/posts/create", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({text,img}),
-				})
+					body: JSON.stringify({ text, img }),
+				});
 				const data = await res.json();
-				if(!res.ok){
+				if (!res.ok) {
 					throw new Error(data.error || "Something went wrong");
 				}
 				return data;
@@ -36,22 +37,18 @@ const CreatePost = () => {
 				throw new Error(error);
 			}
 		},
+
 		onSuccess: () => {
 			setText("");
 			setImg(null);
 			toast.success("Post created successfully");
-			// invalidate query .. 
-			queryClient.invalidateQueries({queryKey: ['posts']});
-
-		},onError: () => {
-			toast.error("Error creating the post");
-		}
-	})
-
+			queryClient.invalidateQueries({ queryKey: ["posts"] });
+		},
+	});
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		createPost({text, img});
+		createPost({ text, img });
 	};
 
 	const handleImgChange = (e) => {
@@ -75,7 +72,7 @@ const CreatePost = () => {
 			<form className='flex flex-col gap-2 w-full' onSubmit={handleSubmit}>
 				<textarea
 					className='textarea w-full p-0 text-lg resize-none border-none focus:outline-none  border-gray-800'
-					placeholder='What are you feeling?'
+					placeholder='What is happening?!'
 					value={text}
 					onChange={(e) => setText(e.target.value)}
 				/>
@@ -105,7 +102,7 @@ const CreatePost = () => {
 						{isPending ? "Posting..." : "Post"}
 					</button>
 				</div>
-				{isError && <div className='text-red-500'>{error.message || "Something went wrong"}</div>}
+				{isError && <div className='text-red-500'>{error.message}</div>}
 			</form>
 		</div>
 	);
