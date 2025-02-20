@@ -4,15 +4,19 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 
-const Posts = ({ feedType }) => {
+const Posts = ({ feedType, username, userId }) => {
 
 
 	const getPostEndpoint = (feedType) =>{
 		switch (feedType){
-			case "forYou":
+			case "forYou": // Suggested posts on home page :)
 			return "/api/posts/all";
-			case "following":
+			case "following": // Posts of people you are following
 			return "/api/posts/following";
+			case "posts": // Your own posts :)
+			return `/api/posts/user/${username}`;
+			case "likes": // Posts liked by you ..
+				return `/api/posts/likes/${userId}`;
 			default:
 				return "/api/posts/all";
 
@@ -43,7 +47,7 @@ const Posts = ({ feedType }) => {
 	useEffect(() => {
 		refetch();
 
-	}, [feedType, refetch]); // when the feedType changes (following or forYou then we call the refetch function :) )
+	}, [feedType, refetch, username, ]); // when the feedType changes (following or forYou then we call the refetch function :) )
 
 	return (
 		<>
